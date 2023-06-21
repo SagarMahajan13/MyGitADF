@@ -1,0 +1,9 @@
+{
+	"name": "sagardatafactorycloud",
+	"location": "centralindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "a69d5f57-4952-43e4-9182-6efc4bab1298",
+		"tenantId": "82407da4-4eab-47b2-bd1f-4047037b2bbb"
+	}
+}

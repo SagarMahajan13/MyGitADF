@@ -1,0 +1,31 @@
+{
+	"name": "AbhishekSQLAll_DS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AbhishekDB_LS",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"AbhiSoruceSchema": {
+				"type": "string"
+			},
+			"AbhiSoruceTable": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": {
+				"value": "@dataset().AbhiSoruceSchema",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@dataset().AbhiSoruceTable",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

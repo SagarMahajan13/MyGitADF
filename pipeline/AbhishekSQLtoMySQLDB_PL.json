@@ -1,0 +1,135 @@
+{
+	"name": "AbhishekSQLtoMySQLDB_PL",
+	"properties": {
+		"activities": [
+			{
+				"name": "Foreach_AbhishekSQLtoMYSQL",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "LookupforMetadata",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('LookupforMetadata').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "CopyDataforSQLtoGen2",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"writeBehavior": "upsert",
+									"upsertSettings": {
+										"useTempDB": true,
+										"keys": {
+											"value": "@array(item().SoruceTableID)",
+											"type": "Expression"
+										}
+									},
+									"sqlWriterUseTableLock": false,
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "AbhishekSQLDatasource",
+									"type": "DatasetReference",
+									"parameters": {
+										"SourceSQLSchema": {
+											"value": "@item().SourceSchema",
+											"type": "Expression"
+										},
+										"SoruceSQLTable": {
+											"value": "@item().SourceTable",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DestMySQLDB_DS",
+									"type": "DatasetReference",
+									"parameters": {
+										"DestSQLSchema": {
+											"value": "@item().DestScheam",
+											"type": "Expression"
+										},
+										"DestSQLTable": {
+											"value": "@item().DestTableName",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "LookupforMetadata",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "MetadataSource_DS",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			}
+		],
+		"variables": {
+			"PrimaryKey": {
+				"type": "Array"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-06-16T17:37:20Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

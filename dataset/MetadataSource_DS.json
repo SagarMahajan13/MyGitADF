@@ -1,0 +1,17 @@
+{
+	"name": "MetadataSource_DS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AbhishekDB_LS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Metadata"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

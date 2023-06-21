@@ -1,0 +1,133 @@
+{
+	"name": "Gen2toGen2_Foreach_PL",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach_Gen2toGen2",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@variables('Metadata')",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "CopyData_Gen2toGen2",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "DelimitedTextSource",
+									"storeSettings": {
+										"type": "AzureBlobFSReadSettings",
+										"recursive": true,
+										"enablePartitionDiscovery": false
+									},
+									"formatSettings": {
+										"type": "DelimitedTextReadSettings"
+									}
+								},
+								"sink": {
+									"type": "DelimitedTextSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextWriteSettings",
+										"quoteAllText": true,
+										"fileExtension": ".txt"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "SoruceDS_Gen2",
+									"type": "DatasetReference",
+									"parameters": {
+										"InputFolderName": {
+											"value": "@item().inputfoldername",
+											"type": "Expression"
+										},
+										"InputFileName": {
+											"value": "@item().Inputfile",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DestDS_Gen2",
+									"type": "DatasetReference",
+									"parameters": {
+										"OutFolderName": {
+											"value": "@item().outputfoldername",
+											"type": "Expression"
+										},
+										"OutFileName": {
+											"value": "@item().Outputfile",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"variables": {
+			"Metadata": {
+				"type": "Array",
+				"defaultValue": [
+					{
+						"Inputfile": "Employee.csv",
+						"inputfoldername": "Folder1",
+						"outputfoldername": "dim1",
+						"Outputfile": "Employeeoutput.csv"
+					},
+					{
+						"Inputfile": "Department.csv",
+						"inputfoldername": "Folder2",
+						"outputfoldername": "dim2",
+						"Outputfile": "Departmentout.csv"
+					},
+					{
+						"Inputfile": "color.csv",
+						"inputfoldername": "Folder3",
+						"outputfoldername": "dim3",
+						"Outputfile": "colorout.csv"
+					},
+					{
+						"Inputfile": "agreement.csv",
+						"inputfoldername": "Folder4",
+						"outputfoldername": "dim4",
+						"Outputfile": "agreementout.csv"
+					}
+				]
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-06-15T10:26:42Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
