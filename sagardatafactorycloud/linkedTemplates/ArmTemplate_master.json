@@ -1,0 +1,90 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "sagardatafactorycloud"
+		},
+		"AbhishekDB_LS_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AbhishekDB_LS'"
+		},
+		"Gen2Storage_LS_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'Gen2Storage_LS'"
+		},
+		"sqlserversagarSagarDB_LS_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'sqlserversagarSagarDB_LS'"
+		},
+		"Gen2Storage_LS_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://storageaccountgen2sagar.dfs.core.windows.net/"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "sagardatafactorycloud_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"AbhishekDB_LS_connectionString": {
+						"value": "[parameters('AbhishekDB_LS_connectionString')]"
+					},
+					"Gen2Storage_LS_accountKey": {
+						"value": "[parameters('Gen2Storage_LS_accountKey')]"
+					},
+					"sqlserversagarSagarDB_LS_connectionString": {
+						"value": "[parameters('sqlserversagarSagarDB_LS_connectionString')]"
+					},
+					"Gen2Storage_LS_properties_typeProperties_url": {
+						"value": "[parameters('Gen2Storage_LS_properties_typeProperties_url')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "sagardatafactorycloud_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'sagardatafactorycloud_ArmTemplate_0')]"
+			]
+		}
+	]
+}
