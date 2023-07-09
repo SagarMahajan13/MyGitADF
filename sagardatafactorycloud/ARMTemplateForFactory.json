@@ -1533,7 +1533,7 @@
 						"type": "AzureBlobFSLocation",
 						"fileName": "StudentDataDest.csv",
 						"folderPath": {
-							"value": "formatDateTime(utcnow(), 'dd-MMM-yyyy'))",
+							"value": "@formatDateTime(utcNow(), 'dd-MMM-yyyy')",
 							"type": "Expression"
 						},
 						"fileSystem": "clientcontainer"
