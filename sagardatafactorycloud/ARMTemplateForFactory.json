@@ -337,12 +337,12 @@
 						"typeProperties": {
 							"storedProcedureName": "[[dbo].[Proc_UpdatetblLastSyncDate]",
 							"storedProcedureParameters": {
-								"@NewLastSyncDate": {
+								"NewLastSyncDate": {
 									"value": {
-										"value": "@activity('PendingSyncDate').output.firstRow.ModifiedDate",
+										"value": "@{activity('PendingSyncDate').output.firstRow.ModifiedDate}",
 										"type": "Expression"
 									},
-									"type": "Datetime"
+									"type": "DateTime"
 								}
 							}
 						},
