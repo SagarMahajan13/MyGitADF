@@ -8,11 +8,17 @@
 		"AbhishekDB_LS_connectionString": {
 			"value": ""
 		},
+		"DatabricksSagar_LS_accessToken": {
+			"value": ""
+		},
 		"Gen2Storage_LS_accountKey": {
 			"value": ""
 		},
 		"sqlserversagarSagarDB_LS_connectionString": {
 			"value": ""
+		},
+		"DatabricksSagar_LS_properties_typeProperties_existingClusterId": {
+			"value": "0624-151633-ghpftm79"
 		},
 		"Gen2Storage_LS_properties_typeProperties_url": {
 			"value": "https://storageaccountgen2sagar.dfs.core.windows.net/"
