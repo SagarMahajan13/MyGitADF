@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AbhishekDB_LS'"
 		},
+		"ClientDBLinkedServer_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ClientDBLinkedServer'"
+		},
 		"DatabricksSagar_LS_accessToken": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accessToken' of 'DatabricksSagar_LS'"
@@ -310,6 +314,110 @@
 								"parameters": {}
 							}
 						]
+					},
+					{
+						"name": "UpdateLastSyncDate",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "CopyDatetoStorage",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[Proc_UpdatetblLastSyncDate]",
+							"storedProcedureParameters": {
+								"@NewLastSyncDate": {
+									"value": {
+										"value": "@activity('PendingSyncDate').output.firstRow.ModifiedDate",
+										"type": "Expression"
+									},
+									"type": "Datetime"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "sqlserversagarSagarDB_LS",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "CopyDatefromStoragetoSQL",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "UpdateLastSyncDate",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"writeBehavior": "upsert",
+								"upsertSettings": {
+									"useTempDB": true,
+									"keys": [
+										"id"
+									]
+								},
+								"sqlWriterUseTableLock": false,
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "DeltaLoadStorageAccount",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ClientDB",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
 					}
 				],
 				"policy": {
@@ -320,7 +428,9 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/LastSyncDate')]",
-				"[concat(variables('factoryId'), '/datasets/DeltaLoadStorageAccount')]"
+				"[concat(variables('factoryId'), '/datasets/DeltaLoadStorageAccount')]",
+				"[concat(variables('factoryId'), '/linkedServices/sqlserversagarSagarDB_LS')]",
+				"[concat(variables('factoryId'), '/datasets/ClientDB')]"
 			]
 		},
 		{
@@ -1387,6 +1497,27 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ClientDB')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ClientDBLinkedServer",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "StudentdataClient"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ClientDBLinkedServer')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DeltaLoadStorageAccount')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1402,7 +1533,7 @@
 						"type": "AzureBlobFSLocation",
 						"fileName": "StudentDataDest.csv",
 						"folderPath": {
-							"value": "formatDateTime(utcNow(),'dd_MM_yyyy')",
+							"value": "@utcNow()",
 							"type": "Expression"
 						},
 						"fileSystem": "clientcontainer"
@@ -1881,6 +2012,19 @@
 				"type": "AzureSqlDatabase",
 				"typeProperties": {
 					"connectionString": "[parameters('AbhishekDB_LS_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ClientDBLinkedServer')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('ClientDBLinkedServer_connectionString')]"
 				}
 			},
 			"dependsOn": []

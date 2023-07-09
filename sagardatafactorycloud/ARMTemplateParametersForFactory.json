@@ -8,6 +8,9 @@
 		"AbhishekDB_LS_connectionString": {
 			"value": ""
 		},
+		"ClientDBLinkedServer_connectionString": {
+			"value": ""
+		},
 		"DatabricksSagar_LS_accessToken": {
 			"value": ""
 		},

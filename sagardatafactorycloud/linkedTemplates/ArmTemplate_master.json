@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AbhishekDB_LS'"
 		},
+		"ClientDBLinkedServer_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ClientDBLinkedServer'"
+		},
 		"DatabricksSagar_LS_accessToken": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accessToken' of 'DatabricksSagar_LS'"
@@ -60,6 +64,9 @@
 					},
 					"AbhishekDB_LS_connectionString": {
 						"value": "[parameters('AbhishekDB_LS_connectionString')]"
+					},
+					"ClientDBLinkedServer_connectionString": {
+						"value": "[parameters('ClientDBLinkedServer_connectionString')]"
 					},
 					"DatabricksSagar_LS_accessToken": {
 						"value": "[parameters('DatabricksSagar_LS_accessToken')]"
