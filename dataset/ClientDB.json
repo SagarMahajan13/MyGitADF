@@ -1,0 +1,16 @@
+{
+	"name": "ClientDB",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ClientDBLinkedServer",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "StudentdataClient"
+		}
+	}
+}
