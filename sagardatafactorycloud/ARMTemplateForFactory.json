@@ -1400,9 +1400,12 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"fileName": "Stundentdata.csv",
-						"folderPath": "NewFolder",
-						"fileSystem": "input"
+						"fileName": "StudentDataDest.csv",
+						"folderPath": {
+							"value": "formatDateTime(utcNow(),'dd_MM_yyyy')",
+							"type": "Expression"
+						},
+						"fileSystem": "clientcontainer"
 					},
 					"columnDelimiter": ",",
 					"escapeChar": "\\",
