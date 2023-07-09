@@ -1,0 +1,12 @@
+{
+	"name": "LastSyncDate",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sqlserversagarSagarDB_LS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}
